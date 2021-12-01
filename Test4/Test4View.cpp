@@ -47,16 +47,17 @@ CTest4View::CTest4View() noexcept
 	Alpha = 0.0, Beta = 0.0;
 	bPlay = FALSE;
 	m_ProjectionType = ProjectionType::PerspectiveProjection;
+	m_ModelType = ModelType::CXin;
 	/*cube.projection.SetEye(Phi, Psi, R, d);
 	cube.ReadPoint();
 	cube.ReadFacet();
 	transform.SetMatrix(cube.GetVertexArrayName(), 8);*/
 	double nEdge =100;
-	xin.projection.SetEye(Phi, Psi, R, d);
+	/*xin.projection.SetEye(Phi, Psi, R, d);
 	xin.ReadPoint();
 	xin.ReadFacet();
-	transform.SetMatrix(xin.GetVertexArrayName(), 24);
-	//sphere.projection.SetEye(Phi, Psi, R, d);
+	transform.SetMatrix(xin.GetVertexArrayName(), 24);*/
+	sphere.projection.SetEye(Phi, Psi, R, d);
 	/*star.projection.SetEye(Phi, Psi, R, d);
 	star.ReadPoint();
 	star.ReadFacet();
@@ -95,9 +96,9 @@ void CTest4View::DrawObject(CDC* pDC)
 	//xin.Draw2(pDC, pZBuffer);
 	if (m_ProjectionType == ProjectionType::OrthogonalProjection) {
 		//cube.Draw(pDC, pZBuffer);
-		xin.Draw(pDC ,pZBuffer);
+		//xin.Draw(pDC ,pZBuffer);
 		//star.Draw(pDC);
-		//sphere.Draw(pDC);
+		sphere.Draw(pDC, pZBuffer);
 		//read2.Draw(pDC,pZBuffer);
 	}
 	/*else if (m_ProjectionType == ProjectionType::ObliqueProjection) {
@@ -106,8 +107,8 @@ void CTest4View::DrawObject(CDC* pDC)
 	else
 	{
 		//star.Draw2(pDC);
-		xin.Draw2(pDC,pZBuffer);
-		//sphere.Draw(pDC);
+		//xin.Draw2(pDC,pZBuffer);
+		sphere.Draw(pDC, pZBuffer);
 		//xin.Draw2(pDC,pZBuffer);
 		//read2.Draw2(pDC,pZBuffer);
 		//cube.Draw2(pDC, pZBuffer);

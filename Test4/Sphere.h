@@ -7,6 +7,7 @@
 #include"Triangle.h"
 #include"Transform3.h"
 #include"Vector.h"
+#include"ZBuffer.h"
 #define ROUND(d) int(d+0.5)
 class CSphere
 {
@@ -15,8 +16,8 @@ public:
 	virtual~CSphere(void);
 	void SetScale(int nScalar);
 	void SetRotation(double Alpha, double Beta);
-	void DrawFacet(CDC* pDC, CP3* P);
-	void Draw(CDC* pDC);
+	void DrawFacet(CDC* pDC, CP3* P, CZBuffer* pZBuffer);
+	void Draw(CDC* pDC, CZBuffer* pZBuffer);
 public:
 	CProjection projection;
 	CP3 quardrP[4];
