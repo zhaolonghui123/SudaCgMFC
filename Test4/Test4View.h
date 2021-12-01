@@ -58,7 +58,9 @@ protected:
 	CFence fence[5];
 	//CTransform2 transform[5];
 	CP2 CenterPoint[5];
-	CTransform3 transform;
+	CTransform3 transform1;
+	CTransform3 transform2;
+	CTransform3 transform3;
 	CCube cube;
 	CStar star;
 	CXin xin;
@@ -81,6 +83,9 @@ public:
 	afx_msg void OnPerspectiveProjection();
 	afx_msg void OnViewTransform1();
 	afx_msg void OnViewTransform2();
+	afx_msg void OnCube();
+	afx_msg void OnXin();
+	afx_msg void OnSphere();
 };
 
 #ifndef _DEBUG  // Test4View.cpp 中的调试版本

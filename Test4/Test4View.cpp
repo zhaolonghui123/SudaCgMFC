@@ -35,6 +35,9 @@ BEGIN_MESSAGE_MAP(CTest4View, CView)
 
 	ON_COMMAND(ID_32774, &CTest4View::OnViewTransform1)
 	ON_COMMAND(ID_32775, &CTest4View::OnViewTransform2)
+	ON_COMMAND(ID_32776, &CTest4View::OnCube)
+	ON_COMMAND(ID_32777, &CTest4View::OnXin)
+	ON_COMMAND(ID_32779, &CTest4View::OnSphere)
 END_MESSAGE_MAP()
 
 // CTest4View 构造/析构
@@ -46,18 +49,30 @@ CTest4View::CTest4View() noexcept
 	Phi =45.0, Psi = 45.0;
 	Alpha = 0.0, Beta = 0.0;
 	bPlay = FALSE;
+
 	m_ProjectionType = ProjectionType::PerspectiveProjection;
-	m_ModelType = ModelType::CXin;
-	/*cube.projection.SetEye(Phi, Psi, R, d);
-	cube.ReadPoint();
-	cube.ReadFacet();
-	transform.SetMatrix(cube.GetVertexArrayName(), 8);*/
-	double nEdge =100;
-	/*xin.projection.SetEye(Phi, Psi, R, d);
+	m_ModelType = ModelType::CRead;
+	xin.projection.SetEye(Phi, Psi, R, d);
 	xin.ReadPoint();
 	xin.ReadFacet();
-	transform.SetMatrix(xin.GetVertexArrayName(), 24);*/
+	cube.projection.SetEye(Phi, Psi, R, d);
+	cube.ReadPoint();
+	cube.ReadFacet();
 	sphere.projection.SetEye(Phi, Psi, R, d);
+	read2.projection.SetEye(Phi, Psi, R, d);
+	read2.ReadPoint();
+	read2.ReadFacet();
+		
+	transform1.SetMatrix(cube.GetVertexArrayName(), 8);
+	double nEdge1 = 200;
+
+		
+	transform2.SetMatrix(xin.GetVertexArrayName(), 24);
+	double nEdge2 = 100;
+
+	transform3.SetMatrix(read2.GetVertexArrayName(), 19231);
+	double nEdge3 = 50;
+
 	/*star.projection.SetEye(Phi, Psi, R, d);
 	star.ReadPoint();
 	star.ReadFacet();
@@ -66,12 +81,14 @@ CTest4View::CTest4View() noexcept
 	read.ReadPoint();
 	read.ReadFacet();
 	transform.SetMatrix(read.GetVertexArrayName(), 6527);*/
-	/*read2.projection.SetEye(Phi, Psi, R, d);
-	read2.ReadPoint();
-	read2.ReadFacet();
-	transform.SetMatrix(read2.GetVertexArrayName(), 19231);*/
-	transform.Scale(nEdge, nEdge, nEdge);
-	transform.Translate(-nEdge / 2, -nEdge / 2, -nEdge / 2);
+	transform1.Scale(nEdge1, nEdge1, nEdge1);
+	transform1.Translate(-nEdge1 / 2, -nEdge1 / 2, -nEdge1 / 2);
+
+	transform2.Scale(nEdge2, nEdge2, nEdge2);
+	transform2.Translate(-nEdge1 / 2, -nEdge2 / 2, -nEdge2 / 2);
+
+	transform3.Scale(nEdge3, nEdge3, nEdge3);
+	transform3.Translate(-nEdge3 / 2, -nEdge3 / 2, -nEdge3 / 2);
 
 }
 
@@ -95,45 +112,37 @@ void CTest4View::DrawObject(CDC* pDC)
 	pZBuffer->InitialDepthBuffer(5000, 5000, 5000);//初始化深度缓冲器
 	//xin.Draw2(pDC, pZBuffer);
 	if (m_ProjectionType == ProjectionType::OrthogonalProjection) {
-		//cube.Draw(pDC, pZBuffer);
-		//xin.Draw(pDC ,pZBuffer);
-		//star.Draw(pDC);
-		sphere.Draw(pDC, pZBuffer);
-		//read2.Draw(pDC,pZBuffer);
+		if (m_ModelType == ModelType::CCube) {
+			cube.Draw(pDC, pZBuffer);
+		}
+		else if (m_ModelType == ModelType::CXin) {
+			xin.Draw(pDC, pZBuffer);
+		}
+		else if (m_ModelType == ModelType::CSphere) {
+			sphere.Draw(pDC, pZBuffer);
+		}
+		else
+		{
+			read2.Draw(pDC, pZBuffer);
+		}
 	}
-	/*else if (m_ProjectionType == ProjectionType::ObliqueProjection) {
-		cube.Draw2(pDC);
-	}*/
 	else
 	{
-		//star.Draw2(pDC);
-		//xin.Draw2(pDC,pZBuffer);
-		sphere.Draw(pDC, pZBuffer);
-		//xin.Draw2(pDC,pZBuffer);
-		//read2.Draw2(pDC,pZBuffer);
-		//cube.Draw2(pDC, pZBuffer);
+		if (m_ModelType == ModelType::CCube) {
+			cube.Draw2(pDC, pZBuffer);
+		}
+		else if (m_ModelType == ModelType::CXin) {
+			xin.Draw2(pDC, pZBuffer);
+		}
+		else if (m_ModelType == ModelType::CSphere) {
+			sphere.Draw(pDC, pZBuffer);
+		}
+		else
+		{
+			read2.Draw2(pDC, pZBuffer);
+		}
 	}
 	delete pZBuffer;//释放内存
-	/*switch (m_ProjectionType)
-	{
-	case ProjectionType::OrthogonalProjection:
-	{
-		Invalidate(FALSE);
-		cube.Draw(pDC);
-	}
-	case ProjectionType::ObliqueProjection:
-	{
-		Invalidate(FALSE);
-		cube.Draw2(pDC);
-	}
-	case ProjectionType::PerspectiveProjection:
-	{
-		Invalidate(FALSE);
-		cube.Draw3(pDC);
-	}
-	default:
-		break;
-	}*/
 }
 
 void CTest4View::DoubleBuffer(CDC* pDC)
@@ -228,17 +237,37 @@ void CTest4View::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 			{
 			case VK_UP: {
 				R += 50;
-				//cube.projection.SetEye(Phi, Psi, R, d);
-				xin.projection.SetEye(Phi, Psi, R, d);
-				//read2.projection.SetEye(Phi, Psi, R, d);
+				if (m_ModelType == ModelType::CCube) {
+					cube.projection.SetEye(Phi, Psi, R, d);
+				}
+				else if (m_ModelType == ModelType::CXin) {
+					xin.projection.SetEye(Phi, Psi, R, d);
+				}
+				else if (m_ModelType == ModelType::CSphere) {
+
+				}
+				else
+				{
+					read2.projection.SetEye(Phi, Psi, R, d);
+				}
 				//star.projection.SetEye(Phi, Psi, R, d);
 				break;
 			}
 			case VK_DOWN: {
 				R -= 50;
-				//cube.projection.SetEye(Phi, Psi, R, d);
-				xin.projection.SetEye(Phi, Psi, R, d);
-				//read2.projection.SetEye(Phi, Psi, R, d);
+				if (m_ModelType == ModelType::CCube) {
+					cube.projection.SetEye(Phi, Psi, R, d);
+				}
+				else if (m_ModelType == ModelType::CXin) {
+					xin.projection.SetEye(Phi, Psi, R, d);
+				}
+				else if (m_ModelType == ModelType::CSphere) {
+
+				}
+				else
+				{
+					read2.projection.SetEye(Phi, Psi, R, d);
+				}
 				//star.projection.SetEye(Phi, Psi, R, d);
 				break;
 			}
@@ -253,46 +282,86 @@ void CTest4View::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 			{
 			case VK_UP: {
 				Phi += 5;
-				//cube.projection.SetEye(Phi, Psi);
-				//cube.projection.InitialParameter();
-				xin.projection.SetEye(Phi, Psi);
-				xin.projection.InitialParameter();
-				//read2.projection.SetEye(Phi, Psi);
-				//read2.projection.InitialParameter();
+				if (m_ModelType == ModelType::CCube) {
+					cube.projection.SetEye(Phi, Psi);
+					cube.projection.InitialParameter();
+				}
+				else if (m_ModelType == ModelType::CXin) {
+					xin.projection.SetEye(Phi, Psi);
+					xin.projection.InitialParameter();
+				}
+				else if (m_ModelType == ModelType::CSphere) {
+
+				}
+				else
+				{
+					read2.projection.SetEye(Phi, Psi);
+					read2.projection.InitialParameter();
+				}
 				//star.projection.SetEye(Phi, Psi);
 				//star.projection.InitialParameter();
 				break;
 			}
 			case VK_DOWN: {
 				Phi -= 5;
-				//cube.projection.SetEye(Phi, Psi);
-				//cube.projection.InitialParameter();
-				xin.projection.SetEye(Phi, Psi);
-				xin.projection.InitialParameter();
-				//read.projection.SetEye(Phi, Psi);
-				//read.projection.InitialParameter();//star.projection.SetEye(Phi, Psi);
+				if (m_ModelType == ModelType::CCube) {
+					cube.projection.SetEye(Phi, Psi);
+					cube.projection.InitialParameter();
+				}
+				else if (m_ModelType == ModelType::CXin) {
+					xin.projection.SetEye(Phi, Psi);
+					xin.projection.InitialParameter();
+				}
+				else if (m_ModelType == ModelType::CSphere) {
+
+				}
+				else
+				{
+					read2.projection.SetEye(Phi, Psi);
+					read2.projection.InitialParameter();
+				}//star.projection.SetEye(Phi, Psi);
 				//star.projection.InitialParameter();
 				break;
 			}
 			case VK_LEFT: {
 				Psi += 5;
-				//cube.projection.SetEye(Phi, Psi);
-				//cube.projection.InitialParameter();
-				xin.projection.SetEye(Phi, Psi);
-				xin.projection.InitialParameter();
-				//read2.projection.SetEye(Phi, Psi);
-				//read2.projection.InitialParameter();//star.projection.SetEye(Phi, Psi);
+				if (m_ModelType == ModelType::CCube) {
+					cube.projection.SetEye(Phi, Psi);
+					cube.projection.InitialParameter();
+				}
+				else if (m_ModelType == ModelType::CXin) {
+					xin.projection.SetEye(Phi, Psi);
+					xin.projection.InitialParameter();
+				}
+				else if (m_ModelType == ModelType::CSphere) {
+
+				}
+				else
+				{
+					read2.projection.SetEye(Phi, Psi);
+					read2.projection.InitialParameter();
+				}//star.projection.SetEye(Phi, Psi);
 				//star.projection.InitialParameter();
 				break;
 			}
 			case VK_RIGHT: {
 				Psi -= 5;
-				//cube.projection.SetEye(Phi, Psi);
-				//cube.projection.InitialParameter();
-				xin.projection.SetEye(Phi, Psi);
-				xin.projection.InitialParameter();
-				//read2.projection.SetEye(Phi, Psi);
-				//read.projection.InitialParameter();//star.projection.SetEye(Phi, Psi);
+				if (m_ModelType == ModelType::CCube) {
+					cube.projection.SetEye(Phi, Psi);
+					cube.projection.InitialParameter();
+				}
+				else if (m_ModelType == ModelType::CXin) {
+					xin.projection.SetEye(Phi, Psi);
+					xin.projection.InitialParameter();
+				}
+				else if (m_ModelType == ModelType::CSphere) {
+
+				}
+				else
+				{
+					read2.projection.SetEye(Phi, Psi);
+					read2.projection.InitialParameter();
+				}//star.projection.SetEye(Phi, Psi);
 				//star.projection.InitialParameter();
 				break;
 			}
@@ -307,22 +376,70 @@ void CTest4View::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 			{
 			case VK_UP: {
 				Alpha = -2;
-				transform.RotateX(Alpha);
+				if (m_ModelType == ModelType::CCube) {
+					transform1.RotateX(Alpha);
+				}
+				else if (m_ModelType == ModelType::CXin) {
+					transform2.RotateX(Alpha);
+				}
+				else if (m_ModelType == ModelType::CSphere) {
+
+				}
+				else
+				{
+					transform3.RotateX(Alpha);
+				}
 				break;
 			}
 			case VK_DOWN: {
 				Alpha = +2;
-				transform.RotateX(Alpha);
+				if (m_ModelType == ModelType::CCube) {
+					transform1.RotateX(Alpha);
+				}
+				else if (m_ModelType == ModelType::CXin) {
+					transform2.RotateX(Alpha);
+				}
+				else if (m_ModelType == ModelType::CSphere) {
+
+				}
+				else
+				{
+					transform3.RotateX(Alpha);
+				}
 				break;
 			}
 			case VK_LEFT: {
 				Beta = -2;
-				transform.RotateY(Beta);
+				if (m_ModelType == ModelType::CCube) {
+					transform1.RotateY(Beta);
+				}
+				else if (m_ModelType == ModelType::CXin) {
+					transform2.RotateY(Beta);
+				}
+				else if (m_ModelType == ModelType::CSphere) {
+
+				}
+				else
+				{
+					transform3.RotateY(Beta);
+				}
 				break;
 			}
 			case VK_RIGHT: {
 				Beta = +2;
-				transform.RotateY(Beta);
+				if (m_ModelType == ModelType::CCube) {
+					transform1.RotateY(Beta);
+				}
+				else if (m_ModelType == ModelType::CXin) {
+					transform2.RotateY(Beta);
+				}
+				else if (m_ModelType == ModelType::CSphere) {
+
+				}
+				else
+				{
+					transform3.RotateY(Beta);
+				}
 				break;
 			}
 			default: {
@@ -373,5 +490,29 @@ void CTest4View::OnViewTransform2()
 {
 	// TODO: 在此添加命令处理程序代码
 	m_ProjectionType = ProjectionType::ViewTransform2;
+	Invalidate(FALSE);
+}
+
+
+void CTest4View::OnCube()
+{
+	// TODO: 在此添加命令处理程序代码
+	m_ModelType = ModelType::CCube;
+	Invalidate(FALSE);
+}
+
+
+void CTest4View::OnXin()
+{
+	// TODO: 在此添加命令处理程序代码
+	m_ModelType = ModelType::CXin;
+	Invalidate(FALSE);
+}
+
+
+void CTest4View::OnSphere()
+{
+	// TODO: 在此添加命令处理程序代码
+	m_ModelType = ModelType::CSphere;
 	Invalidate(FALSE);
 }
