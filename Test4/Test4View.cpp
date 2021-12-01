@@ -38,6 +38,7 @@ BEGIN_MESSAGE_MAP(CTest4View, CView)
 	ON_COMMAND(ID_32776, &CTest4View::OnCube)
 	ON_COMMAND(ID_32777, &CTest4View::OnXin)
 	ON_COMMAND(ID_32779, &CTest4View::OnSphere)
+	ON_COMMAND(ID_32780, &CTest4View::OnViewTransform3)
 END_MESSAGE_MAP()
 
 // CTest4View 构造/析构
@@ -48,6 +49,7 @@ CTest4View::CTest4View() noexcept
 	R = 1200, d = 800;
 	Phi =45.0, Psi = 45.0;
 	Alpha = 0.0, Beta = 0.0;
+	T = 0;
 	bPlay = FALSE;
 
 	m_ProjectionType = ProjectionType::PerspectiveProjection;
@@ -370,6 +372,84 @@ void CTest4View::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 			}
 			Invalidate(FALSE);
 		}
+		else if (m_ProjectionType == ProjectionType::ViewTransform3) 
+		{
+			switch (nChar)
+			{
+			case VK_UP: {
+				T = +2;
+				if (m_ModelType == ModelType::CCube) {
+					transform1.Translate(T, 0, 0);
+				}
+				else if (m_ModelType == ModelType::CXin) {
+					transform2.Translate(T, 0, 0);
+				}
+				else if (m_ModelType == ModelType::CSphere) {
+
+				}
+				else
+				{
+					transform3.Translate(T, 0, 0);
+				}
+				break;
+			}
+			case VK_DOWN: {
+				T = -2;
+				if (m_ModelType == ModelType::CCube) {
+					transform1.Translate(T, 0, 0);
+				}
+				else if (m_ModelType == ModelType::CXin) {
+					transform2.Translate(T, 0, 0);
+				}
+				else if (m_ModelType == ModelType::CSphere) {
+
+				}
+				else
+				{
+					transform3.Translate(T, 0, 0);
+				}
+				break;
+			}
+			case VK_LEFT: {
+				T = -2;
+				if (m_ModelType == ModelType::CCube) {
+					transform1.Translate(0, T, 0);
+				}
+				else if (m_ModelType == ModelType::CXin) {
+					transform2.Translate(0, T, 0);
+				}
+				else if (m_ModelType == ModelType::CSphere) {
+
+				}
+				else
+				{
+					transform3.Translate(0, T, 0);
+				}
+				break;
+			}
+			case VK_RIGHT: {
+				T = +2;
+				if (m_ModelType == ModelType::CCube) {
+					transform1.Translate(0, T, 0);
+				}
+				else if (m_ModelType == ModelType::CXin) {
+					transform2.Translate(0, T, 0);
+				}
+				else if (m_ModelType == ModelType::CSphere) {
+
+				}
+				else
+				{
+					transform3.Translate(0, T, 0);
+				}
+				break;
+			}
+			default: 
+			{
+				break; 
+			}Invalidate(FALSE);
+			}
+		}
 		else
 		{
 			switch (nChar)
@@ -514,5 +594,13 @@ void CTest4View::OnSphere()
 {
 	// TODO: 在此添加命令处理程序代码
 	m_ModelType = ModelType::CSphere;
+	Invalidate(FALSE);
+}
+
+
+void CTest4View::OnViewTransform3()
+{
+	// TODO: 在此添加命令处理程序代码
+	m_ProjectionType = ProjectionType::ViewTransform3;
 	Invalidate(FALSE);
 }

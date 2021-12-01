@@ -31,7 +31,7 @@ public:
 	void DoubleBuffer(CDC* pDC);
 	enum class ProjectionType
 	{
-		PerspectiveProjection, ObliqueProjection, OrthogonalProjection, ViewTransform1, ViewTransform2
+		PerspectiveProjection, ObliqueProjection, OrthogonalProjection, ViewTransform1, ViewTransform2,ViewTransform3
 	}m_ProjectionType;
 	enum class ModelType
 	{
@@ -68,6 +68,7 @@ protected:
 	CRead2 read2;
 	CSphere sphere;
 	double Alpha, Beta;
+	double T;
 	double Phi, Psi;
 	double R, d;
 	BOOL bPlay;
@@ -86,6 +87,7 @@ public:
 	afx_msg void OnCube();
 	afx_msg void OnXin();
 	afx_msg void OnSphere();
+	afx_msg void OnViewTransform3();
 };
 
 #ifndef _DEBUG  // Test4View.cpp 中的调试版本
