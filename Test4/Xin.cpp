@@ -80,11 +80,32 @@ CP3* CXin::GetVertexArrayName(void)
 	return P;
 }
 
-void CXin::Draw(CDC* pDC)
+void CXin::Draw(CDC* pDC, CZBuffer* pZBuffer)
 {
 	CP3 ScreenPoint[4], temp;
-	CTriangle* pfill = new CTriangle;
 	CP3 ViewPoint = projection.EyePoint;
+	for (int nFacet = 0; nFacet < 18; nFacet++)//面循环
+	{
+		for (int nPoint = 0; nPoint < 4; nPoint++)
+		{
+			ScreenPoint[nPoint] = projection.OrthogonalProjection(P[F[nFacet].Index[nPoint]]);
+			ScreenPoint[nPoint].c = P[F[nFacet].Index[nPoint]].c;
+		}
+		pZBuffer->SetPoint(ScreenPoint[0], ScreenPoint[2], ScreenPoint[3]);
+		pZBuffer->GouraudShade(pDC);
+		pZBuffer->SetPoint(ScreenPoint[0], ScreenPoint[1], ScreenPoint[2]);//三角形
+		pZBuffer->GouraudShade(pDC);
+	}
+	for (int nFacet = 18; nFacet < 26; nFacet++)//面循环
+	{
+		for (int nPoint = 0; nPoint < 3; nPoint++)
+		{
+			ScreenPoint[nPoint] = projection.OrthogonalProjection(P[F[nFacet].Index[nPoint]]);
+			ScreenPoint[nPoint].c = P[F[nFacet].Index[nPoint]].c;
+		}
+		pZBuffer->SetPoint(ScreenPoint[0], ScreenPoint[1], ScreenPoint[2]);//三角形
+		pZBuffer->GouraudShade(pDC);
+	}
 	for (int nFacet = 0; nFacet < 18; nFacet++)
 	{
 		for (int i = 0; i < 4; i++) {
@@ -102,8 +123,6 @@ void CXin::Draw(CDC* pDC)
 		if (DotProduct(ViewVector, FacetNormal) >= 0) {
 			for (int nPoint = 0; nPoint < 4; nPoint++)
 			{
-				//ScreenPoint.x = P[F[nFacet].Index[nPoint]].x;
-				//ScreenPoint.y = P[F[nFacet].Index[nPoint]].y;
 				ScreenPoint[nPoint] = projection.OrthogonalProjection(P[F[nFacet].Index[nPoint]]);
 				ScreenPoint[nPoint].c = P[F[nFacet].Index[nPoint]].c;
 				if (0 == nPoint)
@@ -117,10 +136,6 @@ void CXin::Draw(CDC* pDC)
 				}
 			}
 			line.LineTo(pDC, temp, RGB(0, 0, 0));
-			pfill->SetPoint(ScreenPoint[0], ScreenPoint[2], ScreenPoint[3]);
-			pfill->GouraudShader(pDC);
-			pfill->SetPoint(ScreenPoint[0], ScreenPoint[1], ScreenPoint[2]);
-			pfill->GouraudShader(pDC);
 		}
 	}
 	for (int nFacet = 18; nFacet < 26; nFacet++)
@@ -140,8 +155,6 @@ void CXin::Draw(CDC* pDC)
 		if (DotProduct(ViewVector, FacetNormal) >= 0) {
 			for (int nPoint = 0; nPoint < 3; nPoint++)
 			{
-				//ScreenPoint.x = P[F[nFacet].Index[nPoint]].x;
-				//ScreenPoint.y = P[F[nFacet].Index[nPoint]].y;
 				ScreenPoint[nPoint] = projection.OrthogonalProjection(P[F[nFacet].Index[nPoint]]);
 				ScreenPoint[nPoint].c = P[F[nFacet].Index[nPoint]].c;
 				if (0 == nPoint)
@@ -155,16 +168,14 @@ void CXin::Draw(CDC* pDC)
 				}
 			}
 			line.LineTo(pDC, temp, RGB(0, 0, 0));
-			pfill->SetPoint(ScreenPoint[0], ScreenPoint[1], ScreenPoint[2]);
-			pfill->GouraudShader(pDC);
 		}
 	}
-	delete pfill;
 }
 
 void CXin::Draw2(CDC* pDC, CZBuffer* pZBuffer)
 {
 	CP3 ScreenPoint[4], temp;
+	CP3 ViewPoint = projection.EyePoint;
 	for (int nFacet = 0; nFacet < 18; nFacet++)//面循环
 	{
 		for (int nPoint = 0; nPoint < 4; nPoint++)
@@ -187,14 +198,6 @@ void CXin::Draw2(CDC* pDC, CZBuffer* pZBuffer)
 		pZBuffer->SetPoint(ScreenPoint[0], ScreenPoint[1], ScreenPoint[2]);//三角形
 		pZBuffer->GouraudShade(pDC);
 	}
-}
-
-
-void CXin::Draw3(CDC* pDC)
-{
-	CP3 ScreenPoint[4], temp;
-	CTriangle* pfill = new CTriangle;
-	CP3 ViewPoint = projection.EyePoint;
 	for (int nFacet = 0; nFacet < 18; nFacet++)
 	{
 		for (int i = 0; i < 4; i++) {
@@ -212,8 +215,7 @@ void CXin::Draw3(CDC* pDC)
 		if (DotProduct(ViewVector, FacetNormal) >= 0) {
 			for (int nPoint = 0; nPoint < 4; nPoint++)
 			{
-				//ScreenPoint.x = P[F[nFacet].Index[nPoint]].x;
-				//ScreenPoint.y = P[F[nFacet].Index[nPoint]].y;
+
 				ScreenPoint[nPoint] = projection.PerspectiveProjection(P[F[nFacet].Index[nPoint]]);
 				ScreenPoint[nPoint].c = P[F[nFacet].Index[nPoint]].c;
 				if (0 == nPoint)
@@ -227,10 +229,6 @@ void CXin::Draw3(CDC* pDC)
 				}
 			}
 			line.LineTo(pDC, temp, RGB(0, 0, 0));
-			pfill->SetPoint(ScreenPoint[0], ScreenPoint[2], ScreenPoint[3]);
-			pfill->GouraudShader(pDC);
-			pfill->SetPoint(ScreenPoint[0], ScreenPoint[1], ScreenPoint[2]);
-			pfill->GouraudShader(pDC);
 		}
 	}
 	for (int nFacet = 18; nFacet < 26; nFacet++)
@@ -250,8 +248,6 @@ void CXin::Draw3(CDC* pDC)
 		if (DotProduct(ViewVector, FacetNormal) >= 0) {
 			for (int nPoint = 0; nPoint < 3; nPoint++)
 			{
-				//ScreenPoint.x = P[F[nFacet].Index[nPoint]].x;
-				//ScreenPoint.y = P[F[nFacet].Index[nPoint]].y;
 				ScreenPoint[nPoint] = projection.PerspectiveProjection(P[F[nFacet].Index[nPoint]]);
 				ScreenPoint[nPoint].c = P[F[nFacet].Index[nPoint]].c;
 				if (0 == nPoint)
@@ -265,9 +261,6 @@ void CXin::Draw3(CDC* pDC)
 				}
 			}
 			line.LineTo(pDC, temp, RGB(0, 0, 0));
-			pfill->SetPoint(ScreenPoint[0], ScreenPoint[1], ScreenPoint[2]);
-			pfill->GouraudShader(pDC);
 		}
 	}
-	delete pfill;
 }

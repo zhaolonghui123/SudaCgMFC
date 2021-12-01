@@ -16,9 +16,8 @@ public:
 	void ReadPoint(void);
 	void ReadFacet(void);
 	CP3* GetVertexArrayName(void);
-	void Draw(CDC* pDC);
+	void Draw(CDC* pDC, CZBuffer* pZBuffer);
 	void Draw2(CDC* pDC, CZBuffer* pZBuffer);
-	void Draw3(CDC* pDC);
 public:
 	CProjection projection;
 private:
