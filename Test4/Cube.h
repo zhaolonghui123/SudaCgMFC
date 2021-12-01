@@ -6,6 +6,7 @@
 #include"Vector.h"
 #include"Triangle.h"
 #include"CLine.h"
+#include"ZBuffer.h"
 #define ROUND(d) int(d+0.5)
 class CCube
 {
@@ -15,9 +16,8 @@ public:
 	void ReadPoint(void);
 	void ReadFacet(void);
 	CP3* GetVertexArrayName(void);
-	void Draw(CDC* pDC);
-	void Draw2(CDC* pDC);
-	void Draw3(CDC* pDC);
+	void Draw(CDC* pDC, CZBuffer* pZBuffer);
+	void Draw2(CDC* pDC, CZBuffer* pZBuffer);
 public:
 	CProjection projection;
 private:
@@ -25,7 +25,5 @@ private:
 	CFacet F[6];
 	CP3 quardrP[4];
 	CLine line;
-	CP2 ObliqueProjection(CP3 WorldPoint);
-	//CP2 PerspectiveProjection(CP3 WorldPoint);
 };
 

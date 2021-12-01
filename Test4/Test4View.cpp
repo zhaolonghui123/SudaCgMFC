@@ -47,11 +47,11 @@ CTest4View::CTest4View() noexcept
 	Alpha = 0.0, Beta = 0.0;
 	bPlay = FALSE;
 	m_ProjectionType = ProjectionType::PerspectiveProjection;
-	/*cube.projection.SetEye(Phi, Psi, R, d);
+	cube.projection.SetEye(Phi, Psi, R, d);
 	cube.ReadPoint();
 	cube.ReadFacet();
-	transform.SetMatrix(cube.GetVertexArrayName(), 8);*/
-	double nEdge =50;
+	transform.SetMatrix(cube.GetVertexArrayName(), 8);
+	double nEdge =100;
 	/*xin.projection.SetEye(Phi, Psi, R, d);
 	xin.ReadPoint();
 	xin.ReadFacet();
@@ -65,10 +65,10 @@ CTest4View::CTest4View() noexcept
 	read.ReadPoint();
 	read.ReadFacet();
 	transform.SetMatrix(read.GetVertexArrayName(), 6527);*/
-	read2.projection.SetEye(Phi, Psi, R, d);
+	/*read2.projection.SetEye(Phi, Psi, R, d);
 	read2.ReadPoint();
 	read2.ReadFacet();
-	transform.SetMatrix(read2.GetVertexArrayName(), 19231);
+	transform.SetMatrix(read2.GetVertexArrayName(), 19231);*/
 	transform.Scale(nEdge, nEdge, nEdge);
 	transform.Translate(-nEdge / 2, -nEdge / 2, -nEdge / 2);
 
@@ -94,11 +94,11 @@ void CTest4View::DrawObject(CDC* pDC)
 	pZBuffer->InitialDepthBuffer(5000, 5000, 5000);//初始化深度缓冲器
 	//xin.Draw2(pDC, pZBuffer);
 	if (m_ProjectionType == ProjectionType::OrthogonalProjection) {
-		//cube.Draw(pDC);
+		cube.Draw(pDC, pZBuffer);
 		//xin.Draw2(pDC ,pZBuffer);
 		//star.Draw(pDC);
 		//sphere.Draw(pDC);
-		read2.Draw(pDC,pZBuffer);
+		//read2.Draw(pDC,pZBuffer);
 	}
 	/*else if (m_ProjectionType == ProjectionType::ObliqueProjection) {
 		cube.Draw2(pDC);
@@ -109,7 +109,8 @@ void CTest4View::DrawObject(CDC* pDC)
 		//xin.Draw2(pDC,pZBuffer);
 		//sphere.Draw(pDC);
 		//xin.Draw2(pDC,pZBuffer);
-		read2.Draw2(pDC,pZBuffer);
+		//read2.Draw2(pDC,pZBuffer);
+		cube.Draw2(pDC, pZBuffer);
 	}
 	delete pZBuffer;//释放内存
 	/*switch (m_ProjectionType)
@@ -226,17 +227,17 @@ void CTest4View::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 			{
 			case VK_UP: {
 				R += 50;
-				//cube.projection.SetEye(Phi, Psi, R, d);
+				cube.projection.SetEye(Phi, Psi, R, d);
 				//xin.projection.SetEye(Phi, Psi, R, d);
-				read2.projection.SetEye(Phi, Psi, R, d);
+				//read2.projection.SetEye(Phi, Psi, R, d);
 				//star.projection.SetEye(Phi, Psi, R, d);
 				break;
 			}
 			case VK_DOWN: {
 				R -= 50;
-				//cube.projection.SetEye(Phi, Psi, R, d);
+				cube.projection.SetEye(Phi, Psi, R, d);
 				//xin.projection.SetEye(Phi, Psi, R, d);
-				read2.projection.SetEye(Phi, Psi, R, d);
+				//read2.projection.SetEye(Phi, Psi, R, d);
 				//star.projection.SetEye(Phi, Psi, R, d);
 				break;
 			}
@@ -251,46 +252,46 @@ void CTest4View::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 			{
 			case VK_UP: {
 				Phi += 5;
-				//cube.projection.SetEye(Phi, Psi);
-				//cube.projection.InitialParameter();
+				cube.projection.SetEye(Phi, Psi);
+				cube.projection.InitialParameter();
 				//xin.projection.SetEye(Phi, Psi);
 				//xin.projection.InitialParameter();
-				read2.projection.SetEye(Phi, Psi);
-				read2.projection.InitialParameter();
+				//read2.projection.SetEye(Phi, Psi);
+				//read2.projection.InitialParameter();
 				//star.projection.SetEye(Phi, Psi);
 				//star.projection.InitialParameter();
 				break;
 			}
 			case VK_DOWN: {
 				Phi -= 5;
-				//cube.projection.SetEye(Phi, Psi);
-				//cube.projection.InitialParameter();
+				cube.projection.SetEye(Phi, Psi);
+				cube.projection.InitialParameter();
 				//xin.projection.SetEye(Phi, Psi);
 				//xin.projection.InitialParameter();
-				read.projection.SetEye(Phi, Psi);
-				read.projection.InitialParameter();//star.projection.SetEye(Phi, Psi);
+				//read.projection.SetEye(Phi, Psi);
+				//read.projection.InitialParameter();//star.projection.SetEye(Phi, Psi);
 				//star.projection.InitialParameter();
 				break;
 			}
 			case VK_LEFT: {
 				Psi += 5;
-				//cube.projection.SetEye(Phi, Psi);
-				//cube.projection.InitialParameter();
+				cube.projection.SetEye(Phi, Psi);
+				cube.projection.InitialParameter();
 				//xin.projection.SetEye(Phi, Psi);
 				//xin.projection.InitialParameter();
-				read2.projection.SetEye(Phi, Psi);
-				read2.projection.InitialParameter();//star.projection.SetEye(Phi, Psi);
+				//read2.projection.SetEye(Phi, Psi);
+				//read2.projection.InitialParameter();//star.projection.SetEye(Phi, Psi);
 				//star.projection.InitialParameter();
 				break;
 			}
 			case VK_RIGHT: {
 				Psi -= 5;
-				//cube.projection.SetEye(Phi, Psi);
-				//cube.projection.InitialParameter();
+				cube.projection.SetEye(Phi, Psi);
+				cube.projection.InitialParameter();
 				//xin.projection.SetEye(Phi, Psi);
 				//xin.projection.InitialParameter();
-				read2.projection.SetEye(Phi, Psi);
-				read.projection.InitialParameter();//star.projection.SetEye(Phi, Psi);
+				//read2.projection.SetEye(Phi, Psi);
+				//read.projection.InitialParameter();//star.projection.SetEye(Phi, Psi);
 				//star.projection.InitialParameter();
 				break;
 			}

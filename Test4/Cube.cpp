@@ -38,11 +38,22 @@ CP3* CCube::GetVertexArrayName(void)
 	return P;
 }
 
-void CCube::Draw(CDC* pDC)
+void CCube::Draw(CDC* pDC, CZBuffer* pZBuffer)
 {
-	CP2 ScreenPoint[4], temp;
-	CTriangle* pfill = new CTriangle;
+	CP3 ScreenPoint[4], temp;
 	CP3 ViewPoint = projection.EyePoint;
+	for (int nFacet = 0; nFacet < 6; nFacet++)//面循环
+	{
+		for (int nPoint = 0; nPoint < 4; nPoint++)
+		{
+			ScreenPoint[nPoint] = projection.OrthogonalProjection(P[F[nFacet].Index[nPoint]]);
+			ScreenPoint[nPoint].c = P[F[nFacet].Index[nPoint]].c;
+		}
+		pZBuffer->SetPoint(ScreenPoint[0], ScreenPoint[2], ScreenPoint[3]);
+		pZBuffer->GouraudShade(pDC);
+		pZBuffer->SetPoint(ScreenPoint[0], ScreenPoint[1], ScreenPoint[2]);//三角形
+		pZBuffer->GouraudShade(pDC);
+	}
 	for (int nFacet = 0; nFacet < 6; nFacet++)
 	{
 		for (int i = 0; i < 4; i++) {
@@ -60,21 +71,7 @@ void CCube::Draw(CDC* pDC)
 		if (DotProduct(ViewVector, FacetNormal) >= 0) {
 			for (int nPoint = 0; nPoint < 4; nPoint++)
 			{
-				//ScreenPoint.x = P[F[nFacet].Index[nPoint]].x;
-				//ScreenPoint.y = P[F[nFacet].Index[nPoint]].y;
-				/*ScreenPoint = projection.OrthogonalProjection(P[F[nFacet].Index[nPoint]]);
-				if (0 == nPoint)
-				{
-					pDC->MoveTo(ROUND(ScreenPoint.x), ROUND(ScreenPoint.y));
-					temp = ScreenPoint;
-				}
-				else
-				{
-					pDC->LineTo(ROUND(ScreenPoint.x), ROUND(ScreenPoint.y));
-				}
-			}
-			pDC->LineTo(ROUND(temp.x), ROUND(temp.y));*/
-				ScreenPoint[nPoint] = projection.PerspectiveProjection(P[F[nFacet].Index[nPoint]]);
+				ScreenPoint[nPoint] = projection.OrthogonalProjection(P[F[nFacet].Index[nPoint]]);
 				ScreenPoint[nPoint].c=P[F[nFacet].Index[nPoint]].c;
 
 				if (0 == nPoint)
@@ -88,58 +85,28 @@ void CCube::Draw(CDC* pDC)
 				}
 			}
 			line.LineTo(pDC, temp, RGB(0, 0, 0));
-			pfill->SetPoint(ScreenPoint[0], ScreenPoint[2], ScreenPoint[3]);
-			pfill->GouraudShader(pDC);
-			pfill->SetPoint(ScreenPoint[0], ScreenPoint[1], ScreenPoint[2]);
-			pfill->GouraudShader(pDC);
 		}
 	}
-	delete pfill;
 }
 
-void CCube::Draw2(CDC* pDC)
+
+
+void CCube::Draw2(CDC* pDC, CZBuffer* pZBuffer)
 {
-	CP2 ScreenPoint, temp;
+	CP3 ScreenPoint[4], temp;
 	CP3 ViewPoint = projection.EyePoint;
-	for (int nFacet = 0; nFacet < 6; nFacet++)
+	for (int nFacet = 0; nFacet < 6; nFacet++)//面循环
 	{
-		for (int i = 0; i < 4; i++) {
-			quardrP[i] = P[F[nFacet].Index[i]];
+		for (int nPoint = 0; nPoint < 4; nPoint++)
+		{
+			ScreenPoint[nPoint] = projection.PerspectiveProjection(P[F[nFacet].Index[nPoint]]);
+			ScreenPoint[nPoint].c = P[F[nFacet].Index[nPoint]].c;
 		}
-		CVector ViewVector(quardrP[0], ViewPoint);
-		ViewVector = ViewVector.Normalize();
-		CVector Vector01(quardrP[0], quardrP[1]);
-		CVector Vector02(quardrP[0], quardrP[2]);
-		CVector Vector03(quardrP[0], quardrP[3]);
-		CVector FacetNormalA = CrossProduct(Vector01, Vector02);
-		CVector FacetNormalB = CrossProduct(Vector02, Vector03);
-		CVector FacetNormal = (FacetNormalA + FacetNormalB);//面法向量
-		FacetNormal = FacetNormal.Normalize();
-		if (DotProduct(ViewVector, FacetNormal) >= 0) {
-			for (int nPoint = 0; nPoint < 4; nPoint++)
-			{
-				//ScreenPoint.x = P[F[nFacet].Index[nPoint]].x - 0.3536 * P[F[nFacet].Index[nPoint]].z;
-				//ScreenPoint.y = P[F[nFacet].Index[nPoint]].y - 0.3536 * P[F[nFacet].Index[nPoint]].z;
-				ScreenPoint = projection.ObliqueProjection(P[F[nFacet].Index[nPoint]]);
-				if (0 == nPoint)
-				{
-					pDC->MoveTo(ROUND(ScreenPoint.x), ROUND(ScreenPoint.y));
-					temp = ScreenPoint;
-				}
-				else
-				{
-					pDC->LineTo(ROUND(ScreenPoint.x), ROUND(ScreenPoint.y));
-				}
-			}
-			pDC->LineTo(ROUND(temp.x), ROUND(temp.y));
-		}
+		pZBuffer->SetPoint(ScreenPoint[0], ScreenPoint[2], ScreenPoint[3]);
+		pZBuffer->GouraudShade(pDC);
+		pZBuffer->SetPoint(ScreenPoint[0], ScreenPoint[1], ScreenPoint[2]);//三角形
+		pZBuffer->GouraudShade(pDC);
 	}
-}
-
-void CCube::Draw3(CDC* pDC)
-{
-	CP2 ScreenPoint, temp;
-	CP3 ViewPoint = projection.EyePoint;
 	for (int nFacet = 0; nFacet < 6; nFacet++)
 	{
 
@@ -158,29 +125,22 @@ void CCube::Draw3(CDC* pDC)
 		if (DotProduct(ViewVector, FacetNormal) >= 0) {
 			for (int nPoint = 0; nPoint < 4; nPoint++)
 			{
-				//ScreenPoint.x = 800 * P[F[nFacet].Index[nPoint]].x / (1200 - P[F[nFacet].Index[nPoint]].z);
-				//ScreenPoint.y = 800 * P[F[nFacet].Index[nPoint]].y / (1200 - P[F[nFacet].Index[nPoint]].z);
-				ScreenPoint = projection.PerspectiveProjection(P[F[nFacet].Index[nPoint]]);
+				ScreenPoint[nPoint] = projection.PerspectiveProjection(P[F[nFacet].Index[nPoint]]);
+				ScreenPoint[nPoint].c = P[F[nFacet].Index[nPoint]].c;
+
 				if (0 == nPoint)
 				{
-					pDC->MoveTo(ROUND(ScreenPoint.x), ROUND(ScreenPoint.y));
-					temp = ScreenPoint;
+					line.MoveTo(pDC, ScreenPoint[nPoint], RGB(0, 0, 0));
+					temp = ScreenPoint[nPoint];
 				}
 				else
 				{
-					pDC->LineTo(ROUND(ScreenPoint.x), ROUND(ScreenPoint.y));
+					line.LineTo(pDC, ScreenPoint[nPoint], RGB(0, 0, 0));
 				}
 			}
-			pDC->LineTo(ROUND(temp.x), ROUND(temp.y));
+			line.LineTo(pDC, temp, RGB(0, 0, 0));
 		}
 	}
 }
 
-CP2 CCube::ObliqueProjection(CP3 WorldPoint)
-{
-	CP2 ScreenPoint;
-	ScreenPoint.x = WorldPoint.x - 0.3536 * WorldPoint.z;
-	ScreenPoint.y = WorldPoint.y - 0.3536 * WorldPoint.z;
-	return ScreenPoint;
-}
 

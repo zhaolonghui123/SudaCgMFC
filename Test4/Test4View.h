@@ -33,7 +33,10 @@ public:
 	{
 		PerspectiveProjection, ObliqueProjection, OrthogonalProjection, ViewTransform1, ViewTransform2
 	}m_ProjectionType;
-
+	enum class ModelType
+	{
+		CXin,CCube,CRead,CSphere
+	}m_ModelType;
 // 重写
 public:
 	virtual void OnDraw(CDC* pDC);  // 重写以绘制该视图
