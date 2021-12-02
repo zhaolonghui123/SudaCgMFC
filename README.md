@@ -92,5 +92,5 @@
 
 该项目<video src="C:\GitProjects\SudaCgMFC\test.mp4"></video>参考了孔令德《三维计算机图形学》<br/>
 
-![image](https://github.com/zhaolonghui123/SudaCgMFC/blob/main/test.gif)
+![image](https://github.com/zhaolonghui123/SudaCgMFC/blob/23d61693d52564f65db336c462f0b7ed0f64dd4c/image/test.gif)
 
