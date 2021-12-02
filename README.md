@@ -94,7 +94,9 @@
 赵龙辉<br/>
 邮箱：1548715169@qq.com<br/>
 
-该项目<video src="C:\GitProjects\SudaCgMFC\test.mp4"></video>参考了孔令德《三维计算机图形学》<br/>
+该项目参考了孔令德《三维计算机图形学》<br/>
 
-![image](https://github.com/zhaolonghui123/SudaCgMFC/blob/23d61693d52564f65db336c462f0b7ed0f64dd4c/image/test.gif)
+<img src="https://cdn.jsdelivr.net/gh/zhaolonghui123/SudaCgMFC@main/image/test.gif" alt="image" style="zoom:67%;" />
+
+
 
